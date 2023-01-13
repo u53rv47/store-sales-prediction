@@ -1,6 +1,13 @@
+from sales.exception import SalesException
+import sys
+
+
 def main():
-    print('main')
+    a = 1/0
 
 
 if __name__ == '__main__':
-    main()
+    try:
+        main()
+    except Exception as e:
+        raise SalesException(e, sys)
