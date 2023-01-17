@@ -1,7 +1,7 @@
 import os
 import sys
-from sensor.exception import SensorException
-from sensor.logger import logging
+from store.exception import StoreException
+from store.logger import logging
 from datetime import datetime
 
 
@@ -11,6 +11,7 @@ TEST_FILE_NAME = "test.csv"
 TRANSFORMER_OBJECT_FILE_NAME = "transformer.pkl"
 TARGET_ENCODER_OBJECT_FILE_NAME = "target_encoder.pkl"
 MODEL_FILE_NAME = "model.pkl"
+BASE_FILE_NAME = "bigmart-sales-data/train_v9rqX0R.csv"
 
 
 class TrainingPipelineConfig:
@@ -20,15 +21,15 @@ class TrainingPipelineConfig:
             self.artifact_dir = os.path.join(
                 os.getcwd(), "artifact", f"{datetime.now().strftime('%m%d%Y_%H%M%S')}")
         except Exception as e:
-            raise SensorException(e, sys)
+            raise StoreException(e, sys)
 
 
 class DataIngestionConfig:
 
     def __init__(self, training_pipeline_config: TrainingPipelineConfig):
         try:
-            self.database_name = "aps"
-            self.collection_name = "sensor"
+            self.database_name = "store"
+            self.collection_name = "sales"
             self.data_ingested_dir = os.path.join(
                 training_pipeline_config.artifact_dir, "data_ingestion")
             self.feature_store_file_path = os.path.join(
@@ -39,13 +40,13 @@ class DataIngestionConfig:
                 self.data_ingested_dir, "dataset", TEST_FILE_NAME)
             self.test_size = 0.2
         except Exception as e:
-            raise SensorException(e, sys)
+            raise StoreException(e, sys)
 
     def to_dict(self) -> dict:
         try:
             return self.__dict__
         except Exception as e:
-            raise SensorException(e, sys)
+            raise StoreException(e, sys)
 
 
 class DataValidationConfig:
@@ -55,10 +56,10 @@ class DataValidationConfig:
                 training_pipeline_config.artifact_dir, "data_validation")
             self.report_file_path = os.path.join(
                 self.data_validation_dir, "report.yaml")
-            self.missing_threshold: float = 0.2
-            self.base_file_path = os.path.join("aps_failure_training_set1.csv")
+            self.missing_threshold: float = 0.3
+            self.base_file_path = os.path.join(BASE_FILE_NAME)
         except Exception as e:
-            raise SensorException(e, sys)
+            raise StoreException(e, sys)
 
 
 class DataTransformationConfig:
@@ -75,7 +76,7 @@ class DataTransformationConfig:
             self.target_encoder_path = os.path.join(
                 self.data_transformation_dir, "target_encoder", TARGET_ENCODER_OBJECT_FILE_NAME)
         except Exception as e:
-            raise SensorException(e, sys)
+            raise StoreException(e, sys)
 
 
 class ModelTrainerConfig:
@@ -88,7 +89,7 @@ class ModelTrainerConfig:
             self.expected_score = 0.7
             self.overfitting_threshold = 0.1
         except Exception as e:
-            raise SensorException(e, sys)
+            raise StoreException(e, sys)
 
 
 class ModelEvaluationConfig:

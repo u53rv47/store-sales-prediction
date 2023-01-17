@@ -1,5 +1,5 @@
-from sensor.pipeline.training_pipeline import start_training_pipeline
-from sensor.pipeline.batch_prediction import start_batch_prediction
+from store.pipeline.training_pipeline import start_training_pipeline
+from store.pipeline.batch_prediction import start_batch_prediction
 
 file_path = "aps_failure_training_set1.csv"
 print(__name__)

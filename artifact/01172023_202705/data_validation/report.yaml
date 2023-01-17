@@ -1,0 +1,37 @@
+data_drift_within_train_dataset:
+  Item_Fat_Content:
+    pvalues: 0.9722425770358998
+    same_distribution: true
+  Item_Identifier:
+    pvalues: 0.9967808720791813
+    same_distribution: true
+  Item_MRP:
+    pvalues: 0.03301348924296323
+    same_distribution: false
+  Item_Outlet_Sales:
+    pvalues: 0.4549922234952226
+    same_distribution: true
+  Item_Type:
+    pvalues: 0.3582546816723587
+    same_distribution: true
+  Item_Visibility:
+    pvalues: 0.5660316768402318
+    same_distribution: true
+  Item_Weight:
+    pvalues: 0.7730124449927585
+    same_distribution: true
+  Outlet_Establishment_Year:
+    pvalues: 0.8329209265107557
+    same_distribution: true
+  Outlet_Identifier:
+    pvalues: 0.687991650662815
+    same_distribution: true
+  Outlet_Location_Type:
+    pvalues: 0.6052748496569936
+    same_distribution: true
+  Outlet_Type:
+    pvalues: 0.9595718038877339
+    same_distribution: true
+missing_values_within_base_dataset: []
+missing_values_within_test_Dataset: []
+missing_values_within_train_dataset: []
