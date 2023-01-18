@@ -143,7 +143,8 @@ class DataValidation:
         try:
             drift_report = dict()
 
-            base_columns = base_df.columns
+            base_columns = base_df.select_dtypes(
+                exclude=["object_"]).columns
 
             for base_column in base_columns:
                 base_data, current_data = base_df[base_column], current_df[base_column]

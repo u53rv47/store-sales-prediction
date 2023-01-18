@@ -19,14 +19,13 @@ class DataTransformationArtifact:
     transform_object_path: str
     transformed_train_path: str
     transformed_test_path: str
-    target_encoder_path: str  # check later
 
 
 @dataclass
 class ModelTrainerArtifact:
     model_path: str
-    f1_train_score: str  # check later
-    f1_test_score: str  # check later
+    adj_r2_train: str
+    adj_r2_test: str
 
 
 @dataclass()

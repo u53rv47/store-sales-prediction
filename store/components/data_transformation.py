@@ -9,9 +9,7 @@ import pandas as pd
 from store import utils
 import numpy as np
 from sklearn.preprocessing import LabelEncoder
-from imblearn.combine import SMOTETomek
-from sklearn.impute import SimpleImputer
-from sklearn.preprocessing import RobustScaler
+from sklearn.preprocessing import StandardScaler
 from store.config import TARGET_COLUMN
 
 
@@ -26,18 +24,58 @@ class DataTransformation:
         except Exception as e:
             raise StoreException(e, sys)
 
-    @classmethod
-    def get_data_transformer_object(cls) -> Pipeline:
-        try:
-            simple_imputer = SimpleImputer(strategy='constant', fill_value=0)
-            robust_scaler = RobustScaler()
-            pipeline = Pipeline(steps=[
-                ('Imputer', simple_imputer),
-                ('RobustScaler', robust_scaler)
-            ])
-            return pipeline
-        except Exception as e:
-            raise StoreException(e, sys)
+    def data_label(self, df: pd.DataFrame) -> pd.DataFrame:
+
+        # Label encoding the train data
+        df['Item_Fat_Content'].replace(
+            {'low fat': 'Low Fat', 'LF': 'Low Fat', 'reg': 'Regular'}, inplace=True)
+        df['Outlet_Location_Type'].replace(
+            {'Tier 1': 0, 'Tier 2': 1, 'Tier 3': 2}, inplace=True)
+        df['Outlet_Type'].replace(
+            {'Supermarket Type1': 0, 'Supermarket Type2': 1,
+             'Supermarket Type3': 2, 'Grocery Store': 3}, inplace=True)
+
+        df_no_null = df[df.Item_Weight.isnull(
+        ) == False]
+        df_null = df[df.Item_Weight.isnull() == True]
+
+        item_avg = df_no_null[['Item_Identifier', 'Item_Weight']].groupby(
+            by='Item_Identifier', as_index=False).mean()
+
+        tmp_data = pd.merge(right=df_null.drop('Item_Weight', axis=1), left=item_avg,
+                            right_on='Item_Identifier', left_on='Item_Identifier', how='inner')
+
+        df = pd.concat([df_no_null, tmp_data], axis=0)
+
+        df_no_null = df[df.Outlet_Size.isnull(
+        ) == False]
+
+        df_null = df[df.Outlet_Size.isnull() == True]
+
+        train10 = df_null[df_null['Outlet_Identifier'] == 'OUT010']
+        train10.replace(np.nan, 'Medium', inplace=True)
+
+        train17 = df_null[df_null['Outlet_Identifier'] == 'OUT017']
+        train17.replace(np.nan, 'Medium', inplace=True)
+
+        train45 = df_null[df_null['Outlet_Identifier'] == 'OUT045']
+        train45.replace(np.nan, 'Small', inplace=True)
+
+        df = pd.concat(
+            [df_no_null, train10, train17, train45], axis=0)
+
+        df['Outlet_Size'].replace(
+            {'Small': 0, 'Medium': 1, 'High': 2}, inplace=True)
+
+        label_encoder = LabelEncoder()
+        df['Item_Fat_Content'] = label_encoder.fit_transform(
+            df['Item_Fat_Content'])
+        df['Item_Type'] = label_encoder.fit_transform(
+            df['Item_Type'])
+
+        df.drop(['Item_Identifier', 'Outlet_Identifier'], axis=1, inplace=True)
+
+        return df
 
     def initiate_data_transformation(self,) -> artifact_entity.DataTransformationArtifact:
         try:
@@ -45,6 +83,12 @@ class DataTransformation:
             train_df = pd.read_csv(
                 self.data_ingestion_artifact.train_file_path)
             test_df = pd.read_csv(self.data_ingestion_artifact.test_file_path)
+
+            # Handeling Missing Values and Labeling the train and test dataframes
+            logging.info(
+                "Handeling Missing Values and Labeling the train and test dataframes")
+            train_df = self.data_label(train_df)
+            test_df = self.data_label(test_df)
 
             # selecting input feature for train and test dataframe
             input_feature_train_df = train_df.drop(TARGET_COLUMN, axis=1)
@@ -54,38 +98,17 @@ class DataTransformation:
             target_feature_train_df = train_df[TARGET_COLUMN]
             target_feature_test_df = test_df[TARGET_COLUMN]
 
-            label_encoder = LabelEncoder()
-            label_encoder.fit(target_feature_train_df)
-
-            # transformation on target columns
-            target_feature_train_arr = label_encoder.transform(
-                target_feature_train_df)
-            target_feature_test_arr = label_encoder.transform(
-                target_feature_test_df)
-
-            transformation_pipleine = DataTransformation.get_data_transformer_object()
-            transformation_pipleine.fit(input_feature_train_df)
-
             # transforming input features
-            input_feature_train_arr = transformation_pipleine.transform(
+            scaler = StandardScaler()
+            scaler.fit(input_feature_train_df)
+
+            input_feature_train_arr = scaler.transform(
                 input_feature_train_df)
-            input_feature_test_arr = transformation_pipleine.transform(
+            input_feature_test_arr = scaler.transform(
                 input_feature_test_df)
 
-            smt = SMOTETomek(random_state=42)
-            logging.info(
-                f"Before resampling in training set Input: {input_feature_train_arr.shape} Target:{target_feature_train_arr.shape}")
-            input_feature_train_arr, target_feature_train_arr = smt.fit_resample(
-                input_feature_train_arr, target_feature_train_arr)
-            logging.info(
-                f"After resampling in training set Input: {input_feature_train_arr.shape} Target:{target_feature_train_arr.shape}")
-
-            logging.info(
-                f"Before resampling in testing set Input: {input_feature_test_arr.shape} Target:{target_feature_test_arr.shape}")
-            input_feature_test_arr, target_feature_test_arr = smt.fit_resample(
-                input_feature_test_arr, target_feature_test_arr)
-            logging.info(
-                f"After resampling in testing set Input: {input_feature_test_arr.shape} Target:{target_feature_test_arr.shape}")
+            target_feature_train_arr = np.array(target_feature_train_df)
+            target_feature_test_arr = np.array(target_feature_test_df)
 
             # target encoder
             train_arr = np.c_[input_feature_train_arr,
@@ -95,26 +118,20 @@ class DataTransformation:
             # save numpy array
             utils.save_numpy_array_data(file_path=self.data_transformation_config.transformed_train_path,
                                         array=train_arr)
-
             utils.save_numpy_array_data(file_path=self.data_transformation_config.transformed_test_path,
                                         array=test_arr)
-
             utils.save_object(file_path=self.data_transformation_config.transform_object_path,
-                              obj=transformation_pipleine)
-
-            utils.save_object(file_path=self.data_transformation_config.target_encoder_path,
-                              obj=label_encoder)
+                              obj=scaler)
 
             data_transformation_artifact = artifact_entity.DataTransformationArtifact(
                 transform_object_path=self.data_transformation_config.transform_object_path,
                 transformed_train_path=self.data_transformation_config.transformed_train_path,
-                transformed_test_path=self.data_transformation_config.transformed_test_path,
-                target_encoder_path=self.data_transformation_config.target_encoder_path
-
+                transformed_test_path=self.data_transformation_config.transformed_test_path
             )
 
             logging.info(
                 f"Data transformation object {data_transformation_artifact}")
+
             return data_transformation_artifact
 
         except Exception as e:

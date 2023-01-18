@@ -9,7 +9,6 @@ FILE_NAME = "store.csv"
 TRAIN_FILE_NAME = "train.csv"
 TEST_FILE_NAME = "test.csv"
 TRANSFORMER_OBJECT_FILE_NAME = "transformer.pkl"
-TARGET_ENCODER_OBJECT_FILE_NAME = "target_encoder.pkl"
 MODEL_FILE_NAME = "model.pkl"
 BASE_FILE_NAME = "bigmart-sales-data/train_v9rqX0R.csv"
 
@@ -38,7 +37,7 @@ class DataIngestionConfig:
                 self.data_ingested_dir, "dataset", TRAIN_FILE_NAME)
             self.test_file_path = os.path.join(
                 self.data_ingested_dir, "dataset", TEST_FILE_NAME)
-            self.test_size = 0.2
+            self.test_size = 0.25
         except Exception as e:
             raise StoreException(e, sys)
 
@@ -73,8 +72,6 @@ class DataTransformationConfig:
                 self.data_transformation_dir, "transformed", TRAIN_FILE_NAME.replace("csv", "npz"))
             self.transformed_test_path = os.path.join(
                 self.data_transformation_dir, "transformed", TEST_FILE_NAME.replace("csv", "npz"))
-            self.target_encoder_path = os.path.join(
-                self.data_transformation_dir, "target_encoder", TARGET_ENCODER_OBJECT_FILE_NAME)
         except Exception as e:
             raise StoreException(e, sys)
 
@@ -86,7 +83,7 @@ class ModelTrainerConfig:
                 training_pipeline_config.artifact_dir, "model_trainer")
             self.model_path = os.path.join(
                 self.model_trainer_dir, "model", MODEL_FILE_NAME)
-            self.expected_score = 0.7
+            self.expected_score = 0.5
             self.overfitting_threshold = 0.1
         except Exception as e:
             raise StoreException(e, sys)
@@ -109,4 +106,4 @@ class ModelPusherConfig:
         self.pusher_transformer_path = os.path.join(
             self.pusher_model_dir, TRANSFORMER_OBJECT_FILE_NAME)
         self.pusher_target_encoder_path = os.path.join(
-            self.pusher_model_dir, TARGET_ENCODER_OBJECT_FILE_NAME)
+            self.pusher_model_dir)
