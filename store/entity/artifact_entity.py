@@ -16,6 +16,7 @@ class DataValidationArtifact:
 
 @dataclass
 class DataTransformationArtifact:
+    data_lable_object_path: str
     transform_object_path: str
     transformed_train_path: str
     transformed_test_path: str

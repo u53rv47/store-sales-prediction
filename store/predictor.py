@@ -1,5 +1,5 @@
 import os
-from store.entity.config_entity import TRANSFORMER_OBJECT_FILE_NAME, MODEL_FILE_NAME
+from store.entity.config_entity import DATA_LABLE_FILE_NAME, TRANSFORMER_OBJECT_FILE_NAME, MODEL_FILE_NAME
 from glob import glob
 from typing import Optional
 import os
@@ -36,6 +36,15 @@ class ModelResolver:
         except Exception as e:
             raise e
 
+    def get_latest_data_lable_path(self):
+        try:
+            latest_dir = self.get_latest_dir_path()
+            if latest_dir is None:
+                raise Exception(f"Data Lable is not available")
+            return os.path.join(latest_dir, self.transformer_dir_name, DATA_LABLE_FILE_NAME)
+        except Exception as e:
+            raise e
+
     def get_latest_transformer_path(self):
         try:
             latest_dir = self.get_latest_dir_path()
@@ -66,5 +75,12 @@ class ModelResolver:
         try:
             latest_dir = self.get_latest_save_dir_path()
             return os.path.join(latest_dir, self.transformer_dir_name, TRANSFORMER_OBJECT_FILE_NAME)
+        except Exception as e:
+            raise e
+
+    def get_latest_save_data_lable_path(self):
+        try:
+            latest_dir = self.get_latest_save_dir_path()
+            return os.path.join(latest_dir, self.transformer_dir_name, DATA_LABLE_FILE_NAME)
         except Exception as e:
             raise e

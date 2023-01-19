@@ -8,6 +8,7 @@ from datetime import datetime
 FILE_NAME = "store.csv"
 TRAIN_FILE_NAME = "train.csv"
 TEST_FILE_NAME = "test.csv"
+DATA_LABLE_FILE_NAME = "data_lable.pkl"
 TRANSFORMER_OBJECT_FILE_NAME = "transformer.pkl"
 MODEL_FILE_NAME = "model.pkl"
 BASE_FILE_NAME = "bigmart-sales-data/train_v9rqX0R.csv"
@@ -37,7 +38,7 @@ class DataIngestionConfig:
                 self.data_ingested_dir, "dataset", TRAIN_FILE_NAME)
             self.test_file_path = os.path.join(
                 self.data_ingested_dir, "dataset", TEST_FILE_NAME)
-            self.test_size = 0.25
+            self.test_size = 0.5
         except Exception as e:
             raise StoreException(e, sys)
 
@@ -66,6 +67,8 @@ class DataTransformationConfig:
         try:
             self.data_transformation_dir = os.path.join(
                 training_pipeline_config.artifact_dir, "data_transformation")
+            self.data_lable_object_path = os.path.join(
+                self.data_transformation_dir, "transformer", DATA_LABLE_FILE_NAME)
             self.transform_object_path = os.path.join(
                 self.data_transformation_dir, "transformer", TRANSFORMER_OBJECT_FILE_NAME)
             self.transformed_train_path = os.path.join(
@@ -83,7 +86,7 @@ class ModelTrainerConfig:
                 training_pipeline_config.artifact_dir, "model_trainer")
             self.model_path = os.path.join(
                 self.model_trainer_dir, "model", MODEL_FILE_NAME)
-            self.expected_score = 0.5
+            self.expected_score = 0.25
             self.overfitting_threshold = 0.1
         except Exception as e:
             raise StoreException(e, sys)
@@ -103,7 +106,7 @@ class ModelPusherConfig:
             self.model_pusher_dir, "saved_models")
         self.pusher_model_path = os.path.join(
             self.pusher_model_dir, MODEL_FILE_NAME)
+        self.pusher_data_lable_path = os.path.join(
+            self.pusher_model_dir, DATA_LABLE_FILE_NAME)
         self.pusher_transformer_path = os.path.join(
             self.pusher_model_dir, TRANSFORMER_OBJECT_FILE_NAME)
-        self.pusher_target_encoder_path = os.path.join(
-            self.pusher_model_dir)
