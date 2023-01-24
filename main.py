@@ -16,12 +16,12 @@ from store.components.model_evaluation import ModelEvaluation
 from store.components.model_pusher import ModelPusher
 
 
-# file_path = "aps_failure_training_set1.csv"
+file_path = "bigmart-sales-data/test_AbJTz2l.csv"
 if __name__ == "__main__":
     try:
 
-        start_training_pipeline()
-        # output_file = start_batch_prediction(input_file_path=file_path)
-        # print(output_file)
+        # start_training_pipeline()
+        predictions = start_batch_prediction(input_file_path=file_path)
+        # print(predictions)
     except Exception as e:
         print(e)
