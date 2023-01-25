@@ -1,6 +1,5 @@
 import os
 from store.entity.config_entity import DATA_LABLE_FILE_NAME, TRANSFORMER_OBJECT_FILE_NAME, MODEL_FILE_NAME
-from glob import glob
 from typing import Optional
 import os
 

@@ -1,19 +1,13 @@
-import pymongo
-import pandas as pd
-import json
-from dataclasses import dataclass
-# Provide the mongodb localhost url to connect python to mongodb.
 import os
+import pymongo
 
+print('IMAGE_NAME:', os.getenv("IMAGE_NAME"))
+print('AWS_ACCESS_KEY_ID:', os.getenv("AWS_ACCESS_KEY_ID"))
+print('AWS_SECRET_ACCESS_KEY:', os.getenv("AWS_SECRET_ACCESS_KEY"))
+print('AWS_DEFAULT_REGION:', os.getenv("AWS_DEFAULT_REGION"))
+print('BUCKET_NAME:', os.getenv("BUCKET_NAME"))
 
-@dataclass
-class EnvironmentVariable:
-    mongo_db_url: str = os.getenv("MONGO_DB_URL")
-    aws_access_key_id: str = os.getenv("AWS_ACCESS_KEY_ID")
-    aws_access_secret_key: str = os.getenv("AWS_SECRET_ACCESS_KEY")
-
-
-env_var = EnvironmentVariable()
-print('MONGO_DB_URL:', env_var.mongo_db_url)
-mongo_client = pymongo.MongoClient(env_var.mongo_db_url)
+mongo_db_url = os.getenv("MONGO_DB_URL")
+print('MONGO_DB_URL:', mongo_db_url)
+mongo_client = pymongo.MongoClient(mongo_db_url)
 TARGET_COLUMN = "Item_Outlet_Sales"
