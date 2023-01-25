@@ -12,6 +12,9 @@ from sklearn.preprocessing import LabelEncoder
 from sklearn.preprocessing import StandardScaler
 from store.config import TARGET_COLUMN
 
+import warnings
+warnings.filterwarnings('ignore')
+
 
 def data_label(df: pd.DataFrame) -> pd.DataFrame:
 

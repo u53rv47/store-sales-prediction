@@ -53,8 +53,8 @@ class ModelPusher:
             save_object(file_path=model_path, obj=model)
             save_object(file_path=data_lable_path, obj=data_lable)
 
-            model_pusher_artifact = ModelPusherArtifact(pusher_model_dir=self.model_pusher_config.pusher_model_dir,
-                                                        saved_model_dir=self.model_pusher_config.saved_model_dir)
+            model_pusher_artifact = ModelPusherArtifact(
+                pusher_model_dir=self.model_pusher_config.pusher_model_dir, saved_model_dir=self.model_pusher_config.saved_model_dir)
             logging.info(f"Model pusher artifact: {model_pusher_artifact}")
             return model_pusher_artifact
         except Exception as e:

@@ -129,6 +129,8 @@ dmypy.json
 .pyre/
 
 
-# Artifacts and Logs
+# Artifacts, Logs, Saved Models and Prediction
 artifact/
 logs/
+prediction/
+saved_models/

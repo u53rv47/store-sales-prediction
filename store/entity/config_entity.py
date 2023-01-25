@@ -38,7 +38,7 @@ class DataIngestionConfig:
                 self.data_ingested_dir, "dataset", TRAIN_FILE_NAME)
             self.test_file_path = os.path.join(
                 self.data_ingested_dir, "dataset", TEST_FILE_NAME)
-            self.test_size = 0.5
+            self.test_size = 0.2
         except Exception as e:
             raise StoreException(e, sys)
 
