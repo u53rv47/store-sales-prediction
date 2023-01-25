@@ -1,8 +1,5 @@
-from store.logger import logging
-from store.exception import StoreException
-from store.utils import get_collection_as_dataframe
 import sys
-import os
+from store.exception import StoreException
 from store.entity import config_entity
 from store.components.data_ingestion import DataIngestion
 from store.components.data_validation import DataValidation
