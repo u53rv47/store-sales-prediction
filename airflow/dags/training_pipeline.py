@@ -11,7 +11,7 @@ with DAG(
     'store_sales_training',
     default_args={'retries': 2},
     # [END default_args]
-    description='Store Sales Training Pipeline',
+    description='Store Sales Prediction',
     schedule_interval="@weekly",
     start_date=pendulum.datetime(2023, 1, 20, tz="UTC"),
     catchup=False,
