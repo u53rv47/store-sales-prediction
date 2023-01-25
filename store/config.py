@@ -14,5 +14,6 @@ class EnvironmentVariable:
 
 
 env_var = EnvironmentVariable()
+print('MONGO_DB_URL:', env_var.mongo_db_url)
 mongo_client = pymongo.MongoClient(env_var.mongo_db_url)
 TARGET_COLUMN = "Item_Outlet_Sales"
