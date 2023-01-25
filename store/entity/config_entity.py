@@ -1,7 +1,6 @@
 import os
 import sys
 from store.exception import StoreException
-from store.logger import logging
 from datetime import datetime
 
 

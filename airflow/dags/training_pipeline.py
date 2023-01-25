@@ -1,6 +1,3 @@
-from asyncio import tasks
-import json
-from textwrap import dedent
 import pendulum
 import os
 from airflow import DAG
@@ -13,7 +10,7 @@ with DAG(
     # [END default_args]
     description='Training Pipeline',
     schedule_interval="@weekly",
-    start_date=pendulum.datetime(2023, 1, 20, tz="UTC"),
+    start_date=pendulum.datetime(2023, 1, 25, tz="UTC"),
     catchup=False,
     tags=['example'],
 ) as dag:
