@@ -3,7 +3,6 @@ from store.entity import config_entity, artifact_entity
 from store.exception import StoreException
 from store.logger import logging
 from store.utils import load_object
-from sklearn.metrics import f1_score
 import pandas as pd
 import sys
 import os

@@ -1,7 +1,6 @@
 from store.entity import artifact_entity, config_entity
 from store.exception import StoreException
 from store.logger import logging
-from typing import Optional
 import os
 import sys
 from sklearn.pipeline import Pipeline

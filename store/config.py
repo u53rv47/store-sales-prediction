@@ -9,5 +9,6 @@ print('BUCKET_NAME:', os.getenv("BUCKET_NAME"))
 
 mongo_db_url = os.getenv("MONGO_DB_URL")
 print('MONGO_DB_URL:', mongo_db_url)
+
 mongo_client = pymongo.MongoClient(mongo_db_url)
 TARGET_COLUMN = "Item_Outlet_Sales"

@@ -8,7 +8,6 @@ import sys
 import pandas as pd
 from store import utils
 import numpy as np
-from store.config import TARGET_COLUMN
 
 
 class DataValidation:

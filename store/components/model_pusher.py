@@ -1,7 +1,6 @@
 from store.predictor import ModelResolver
 from store.entity.config_entity import ModelPusherConfig
 from store.exception import StoreException
-import os
 import sys
 from store.utils import load_object, save_object
 from store.logger import logging
