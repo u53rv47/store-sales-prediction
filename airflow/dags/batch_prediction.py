@@ -24,7 +24,7 @@ with DAG(
         # creating directory
         os.makedirs(input_dir, exist_ok=True)
         os.system(
-            f"aws s3 sync s3://{bucket_name}/input_files/ /app/input_files")
+            f"aws s3 sync s3://{bucket_name}/input_files /app/input_files")
 
     def batch_prediction(**kwargs):
         from store.pipeline.batch_prediction import start_batch_prediction
@@ -37,10 +37,10 @@ with DAG(
     def sync_prediction_dir_to_s3_bucket(**kwargs):
         bucket_name = os.getenv("BUCKET_NAME")
         os.system(
-            f"aws s3 sync /app/prediction s3://{bucket_name}/prediction_files/")
+            f"aws s3 sync /app/prediction s3://{bucket_name}/prediction_files")
 
     download_input_files = PythonOperator(
-        task_id="download_file",
+        task_id="download_files",
         python_callable=download_files
 
     )
