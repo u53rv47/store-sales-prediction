@@ -5,7 +5,7 @@ from airflow.operators.python import PythonOperator
 
 
 with DAG(
-    'store_sales_training',
+    'store_sales_prediction',
     default_args={'retries': 2},
     # [END default_args]
     description='Batch Prediction',
