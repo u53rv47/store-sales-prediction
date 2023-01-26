@@ -1,6 +1,3 @@
-from asyncio import tasks
-import json
-from textwrap import dedent
 import pendulum
 import os
 from airflow import DAG
@@ -8,7 +5,7 @@ from airflow.operators.python import PythonOperator
 
 
 with DAG(
-    'store_sales_prediction',
+    'store_sales_training',
     default_args={'retries': 2},
     # [END default_args]
     description='Batch Prediction',
@@ -36,23 +33,24 @@ with DAG(
 
     def sync_prediction_dir_to_s3_bucket(**kwargs):
         bucket_name = os.getenv("BUCKET_NAME")
+        # upload prediction folder to predictionfiles folder in s3 bucket
         os.system(
             f"aws s3 sync /app/prediction s3://{bucket_name}/prediction_files")
 
     download_input_files = PythonOperator(
-        task_id="download_files",
+        task_id="download_file",
         python_callable=download_files
 
     )
 
     generate_prediction_files = PythonOperator(
-        task_id="batch_prediction",
+        task_id="prediction",
         python_callable=batch_prediction
 
     )
 
     upload_prediction_files = PythonOperator(
-        task_id="sync_data_to_s3",
+        task_id="upload_prediction_files",
         python_callable=sync_prediction_dir_to_s3_bucket
 
     )
