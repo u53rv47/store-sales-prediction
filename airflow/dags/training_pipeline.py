@@ -16,7 +16,7 @@ with DAG(
 ) as dag:
 
     def training(**kwargs):
-        from sensor.pipeline.training_pipeline import start_training_pipeline
+        from store.pipeline.training_pipeline import start_training_pipeline
         start_training_pipeline()
 
     def sync_artifact_to_s3_bucket(**kwargs):
