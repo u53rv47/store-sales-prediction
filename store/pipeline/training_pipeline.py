@@ -7,6 +7,8 @@ from store.components.data_transformation import DataTransformation
 from store.components.model_trainer import ModelTrainer
 from store.components.model_evaluation import ModelEvaluation
 from store.components.model_pusher import ModelPusher
+from store.logger import LOG_FILE_PATH, logging
+from store.utils import save_object
 
 
 def start_training_pipeline():
@@ -49,6 +51,8 @@ def start_training_pipeline():
         model_pusher = ModelPusher(model_pusher_config=model_pusher_config,
                                    data_transformation_artifact=data_transformation_artifact, model_trainer_artifact=model_trainer_artifact)
         model_pusher_artifact = model_pusher.initiate_model_pusher()
+
+        save_object(file_path=LOG_FILE_PATH, obj=logging)
 
     except Exception as e:
         raise StoreException(e, sys)

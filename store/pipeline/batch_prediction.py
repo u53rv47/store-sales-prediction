@@ -1,12 +1,14 @@
+import os
+import sys
 import numpy as np
 from store.exception import StoreException
 from store.logger import logging
 from store.predictor import ModelResolver
 import pandas as pd
 from store.utils import load_object
-import os
-import sys
 from datetime import datetime
+from store.logger import LOG_FILE_PATH, logging
+from store.utils import save_object
 PREDICTION_DIR = "prediction"
 
 
@@ -44,6 +46,8 @@ def start_batch_prediction(input_file_path):
             PREDICTION_DIR, prediction_file_name)
         logging.info(f'Prediction file is saved at "{prediction_file_path}"')
         df.to_csv(prediction_file_path, index=False, header=True)
+
+        save_object(file_path=LOG_FILE_PATH, obj=logging)
         return prediction_file_path
     except Exception as e:
         raise StoreException(e, sys)
