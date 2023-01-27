@@ -34,6 +34,8 @@ with DAG(
     def sync_prediction_dir_to_s3_bucket(**kwargs):
         bucket_name = os.getenv("BUCKET_NAME")
         # upload prediction folder to predictionfiles folder in s3 bucket
+        print('Syncing prediction files to S3 Bucket')
+
         os.system(
             f"aws s3 sync /app/prediction s3://{bucket_name}/prediction_files")
 
