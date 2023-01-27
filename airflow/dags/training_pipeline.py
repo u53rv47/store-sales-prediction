@@ -23,8 +23,6 @@ with DAG(
         bucket_name = os.getenv("BUCKET_NAME")
         print('Syncing files to S3 Bucket')
         os.system(f"aws s3 sync /app/artifact s3://{bucket_name}/artifacts")
-        print('Error:',
-              os.system(f"aws s3 sync /app/artifact s3://{bucket_name}/artifacts"))
         os.system(
             f"aws s3 sync /app/saved_models s3://{bucket_name}/saved_models")
         os.system(
